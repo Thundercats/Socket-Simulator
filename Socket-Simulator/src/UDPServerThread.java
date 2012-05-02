@@ -14,6 +14,7 @@ public class UDPServerThread extends Thread {
     private static final int PORT_NUM = 9999;
     private static byte[] bytesReceived;
     private static String message;
+    private static int DATA_SIZE = 1024;
     
     public UDPServerThread() throws IOException {
         this("UPDServerThread");
@@ -37,7 +38,7 @@ public class UDPServerThread extends Thread {
         {
             try {
                 
-                bytesReceived = new byte[1024];
+                bytesReceived = new byte[DATA_SIZE];
                 packet = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.receive(packet);
                 message = new String(packet.getData()); 
