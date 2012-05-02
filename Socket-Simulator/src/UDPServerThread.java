@@ -1,13 +1,3 @@
-
-
-
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -18,10 +8,12 @@ import java.net.InetAddress;
  * @author firen
  */
 public class UDPServerThread extends Thread {
-    private DatagramSocket socket;
-    private DatagramPacket packet, packet2;
-    private boolean flag = true;
+    private static DatagramSocket socket;
+    private static DatagramPacket packet, packet2;
+    private static boolean flag = true;
     private static final int PORT_NUM = 9999;
+    private static byte[] bytesReceived;
+    private static String message;
     
     public UDPServerThread() throws IOException {
         this("UPDServerThread");
@@ -33,17 +25,22 @@ public class UDPServerThread extends Thread {
         socket = new DatagramSocket(PORT_NUM);
     }
     
+    public void close()
+    {
+        socket.close();
+    }
+    
+    
     public void run()
     {
         while(flag)
         {
             try {
-                byte[] bytesReceived = new byte[1024];
                 
+                bytesReceived = new byte[1024];
                 packet = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.receive(packet);
-                
-                String message = new String(packet.getData()); 
+                message = new String(packet.getData()); 
                 System.out.println("Message received: " + message);
            }
             catch (IOException e)
@@ -54,6 +51,7 @@ public class UDPServerThread extends Thread {
             flag = false;
         }
         
-        socket.close();
+        this.close();
+        //socket.close(); close() method takes care of this
     }
 }
