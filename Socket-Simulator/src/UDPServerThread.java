@@ -21,7 +21,7 @@ public class UDPServerThread extends Thread {
     private DatagramSocket socket;
     private DatagramPacket packet, packet2;
     private boolean flag = true;
-    int port;
+    private static final int PORT_NUM = 9999;
     
     public UDPServerThread() throws IOException {
         this("UPDServerThread");
@@ -30,7 +30,7 @@ public class UDPServerThread extends Thread {
     public UDPServerThread(String clientName) throws IOException
     {
         super(clientName);
-        socket = new DatagramSocket(4445);
+        socket = new DatagramSocket(PORT_NUM);
     }
     
     public void run()
