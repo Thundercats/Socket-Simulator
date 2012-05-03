@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Timer;
 
 
 public class UDPClient {
@@ -12,6 +13,7 @@ public class UDPClient {
     private static final int DATA_SIZE = 1024;
     private static InetAddress address;
     private String receivedMessage;
+    private static Timer t;
     
     UDPClient() throws SocketException, UnknownHostException {
         
@@ -45,7 +47,7 @@ public class UDPClient {
     public void receiveMessage(byte[] aByte)
     {
         receivedMessage = new String(aByte);
-        System.out.println("Received message: " + receivedMessage);
+        //System.out.println("Received message: " + receivedMessage);
     }
     
     public void close()
@@ -54,13 +56,20 @@ public class UDPClient {
     }
     
     public static void main(String[] args) throws IOException {
-        
-        UDPClient client = new UDPClient();
-        client.setMessage("hello, this is the client");
-        client.setAddress("localhost");
-        client.createPacket(bytesSent, bytesSent.length, address);
-        client.send(packet);
-        client.receiveMessage(packet.getData());
+        //t = new Timer();
+        long start = System.nanoTime();
+        for(int i = 0; i < 10; i++) {
+            UDPClient client = new UDPClient();
+            client.setMessage("hello, this is the client");
+            client.setAddress("localhost");
+            client.createPacket(bytesSent, bytesSent.length, address);
+            client.send(packet);
+            client.receiveMessage(packet.getData());  
+        }
+        long difference = System.nanoTime() - start;
+        double timeInSeconds = (double) difference / 1000000000.0;
+        System.out.println("The elapse time is " + timeInSeconds);
+        System.out.println("The avg is  " + timeInSeconds / 10);
     }
     
 }
