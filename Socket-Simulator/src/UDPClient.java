@@ -10,15 +10,20 @@ public class UDPClient {
     private static DatagramPacket packet;
     private static byte[] bytesSent;
     private static final int MAX = 1000;
-    private static final int DATA_SIZE = 1024;
+    private static final int DATA_SIZE = 1;
+    private static final int ONE_KB = 1024;
+    private static final int FOUR_KB = ONE_KB * 4;
+    private static final int EIGHT_KB = FOUR_KB * 2;
+    //private static final int SIXTEEN_KB = EIGH
+    
     private static InetAddress address;
     private String receivedMessage;
     private static Timer t;
     
-    UDPClient() throws SocketException, UnknownHostException {
+    UDPClient(int sizeOfData) throws SocketException, UnknownHostException {
         
         socket = new DatagramSocket();
-        bytesSent = new byte[DATA_SIZE];
+        bytesSent = new byte[sizeOfData];
         //address = InetAddress.getByName("localhost");
         //packet = new DatagramPacket(bytesSent, bytesSent.length, address, PORT_NUM);
     }
@@ -57,19 +62,47 @@ public class UDPClient {
     
     public static void main(String[] args) throws IOException {
         //t = new Timer();
+        //Need to test:  1Kbyte, 4KB, 8 KB, 16KB, 32 KB, and 64KB
         long start = System.nanoTime();
-        for(int i = 0; i < 10; i++) {
-            UDPClient client = new UDPClient();
-            client.setMessage("hello, this is the client");
-            client.setAddress("localhost");
-            client.createPacket(bytesSent, bytesSent.length, address);
-            client.send(packet);
-            client.receiveMessage(packet.getData());  
+//        for(int i = 0; i < MAX; i++) {  <--- this whole loop is for the for b(ii) only
+//            UDPClient client = new UDPClient(DATA_SIZE);
+//            client.setMessage("hello, this is the client");
+//            client.setAddress("localhost");
+//            client.createPacket(bytesSent, bytesSent.length, address);
+//            client.send(packet);
+//            client.receiveMessage(packet.getData());  
+//        }
+        
+        UDPClient client;
+        
+        /*
+         * This is what I initially came up with for part b(iii)
+         * I sort of feel I am calculating delay improperly but I have no reference!
+         * Basically what I attempting with this loop is to start out with 1KB 
+         * and increase the size of the message by doubling it, then doing the process 
+         * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
+         */
+        int packetSize = 1024;
+        while (packetSize <= 65536) { //Jump out once we hit 64KB!
+            
+            for (int i = 0; i < 100; i++) {
+                
+                client = new UDPClient(packetSize);
+                client.setMessage("This is " + packetSize +" only"); 
+                client.setAddress("localhost");
+                client.createPacket(bytesSent, bytesSent.length, address);
+                client.send(packet);
+                client.receiveMessage(packet.getData());
+            }
+            
+            packetSize *= 2;
         }
+        
         long difference = System.nanoTime() - start;
         double timeInSeconds = (double) difference / 1000000000.0;
+        
         System.out.println("The elapse time is " + timeInSeconds);
-        System.out.println("The avg is  " + timeInSeconds / 10);
+        System.out.println("The avg is  " + timeInSeconds / MAX);
     }
     
 }

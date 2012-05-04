@@ -30,7 +30,7 @@ public class UDPServerThread extends Thread {
     {
         socket.close();
     }
-    
+
     public void run()
     {
         while(flag)
