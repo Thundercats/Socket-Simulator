@@ -65,7 +65,7 @@ public class UDPClient {
     public static void main(String[] args) throws IOException {
         //t = new Timer();
         //Need to test:  1Kbyte, 4KB, 8 KB, 16KB, 32 KB, and 64KB
-        long start = System.nanoTime();
+       // long start = System.nanoTime();
 //        for(int i = 0; i < MAX; i++) {  <--- this whole loop is for the for b(ii) only
 //            UDPClient client = new UDPClient(DATA_SIZE);
 //            client.setMessage("hello, this is the client");
@@ -86,7 +86,7 @@ public class UDPClient {
          */
         int packetSize = ONE_KB;
         while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
-            
+            long start = System.nanoTime();
             for (int i = 0; i < 100; i++) {
                 
                 client = new UDPClient(packetSize);
@@ -97,14 +97,22 @@ public class UDPClient {
                 client.receiveMessage(packet.getData());
             }
             
+            long difference = System.nanoTime() - start;
+            double timeInSeconds = (double) difference / 1000000000.0;
+            double throughput = packet.getData().length / timeInSeconds;
+            //System.out.println("The elapse time is " + timeInSeconds);
+            System.out.println("For packetSize: " + packetSize + " the avg RTT is  " + timeInSeconds / 100);
+            //System.out.println("The throughput is  " + throughput);
+            
             packetSize *= 2;
         }
         
-        long difference = System.nanoTime() - start;
-        double timeInSeconds = (double) difference / 1000000000.0;
-        
-        System.out.println("The elapse time is " + timeInSeconds);
-        System.out.println("The avg is  " + timeInSeconds / MAX);
+        //long difference = System.nanoTime() - start;
+        //double timeInSeconds = (double) difference / 1000000000.0;
+//        double throughput = packet.getData().length / timeInSeconds;
+//        System.out.println("The elapse time is " + timeInSeconds);
+//        System.out.println("The avg is  " + timeInSeconds / 100);
+//        System.out.println("The throughput is  " + throughput);
     }
     
 }
