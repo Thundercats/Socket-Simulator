@@ -49,9 +49,9 @@ public class UDPServerThread extends Thread {
                 bytesSend = message.getBytes();
                 address = packet.getAddress();
                 port = packet.getPort();
-                
                 packet2 = new DatagramPacket(bytesSend, bytesSend.length, address, port);
                 socket.send(packet2);
+                
                 System.out.println("Message received: " + message);
                 System.out.println("The address: " + address + " The port #: " + port);
            }
