@@ -5,6 +5,7 @@ import java.util.Timer;
 
 public class UDPClient {
    
+    private static String message = "WADDUP, THIS IS CLIENT";
     private static final int PORT_NUM = 9999;
     private static DatagramSocket socket;
     private static DatagramPacket packet;
@@ -63,6 +64,14 @@ public class UDPClient {
     }
     
     public static void main(String[] args) throws IOException {
+       
+        // Checks if there is an argument, else, show usage
+        if(args.length<=0)
+        {
+            System.out.println("Usage: UDPClient destination");
+            System.exit(0);
+        }
+       
         //t = new Timer();
         //Need to test:  1Kbyte, 4KB, 8 KB, 16KB, 32 KB, and 64KB
        // long start = System.nanoTime();
@@ -90,8 +99,8 @@ public class UDPClient {
             for (int i = 0; i < 100; i++) {
                 
                 client = new UDPClient(packetSize);
-                client.setMessage("WADDUP, THIS IS CLIENT"); 
-                client.setAddress("localhost");
+                client.setMessage(message); // Sends the specified message
+                client.setAddress(args[0]); // Connects to the specified address
                 client.createPacket(bytesSent, bytesSent.length, address);
                 client.send(packet);
                 client.receiveMessage(packet.getData());
