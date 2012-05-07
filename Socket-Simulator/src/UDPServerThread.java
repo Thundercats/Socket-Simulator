@@ -16,7 +16,7 @@ public class UDPServerThread extends Thread {
     private static byte[] bytesReceived;
     private static byte[] bytesSend;
     private static String message;
-    private static int DATA_SIZE = 1024;
+    private static int DATA_SIZE = 16384; //16 KB
     private static int port;
     
     public UDPServerThread() throws IOException {
@@ -43,12 +43,13 @@ public class UDPServerThread extends Thread {
                 bytesReceived = new byte[DATA_SIZE];
                 packet = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.receive(packet);
-                //message = "Server received: ";
-                message = new String(packet.getData());
+                message = new String(packet.getData(),0,packet.getLength());
                 
                 bytesSend = new byte[DATA_SIZE];
-                //bytesSend = message.getBytes();
-                bytesSend = ("Server received " + packet.getData()).getBytes();
+                bytesSend = ("Server received " + message).getBytes();
+                
+                System.out.println("this is it: " + new String(bytesSend));
+                
                 address = packet.getAddress();
                 port = packet.getPort();
                 packet2 = new DatagramPacket(bytesSend, bytesSend.length, address, port);

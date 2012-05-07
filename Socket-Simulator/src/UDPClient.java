@@ -22,12 +22,12 @@ public class UDPClient {
     
     private static InetAddress address;
     private String receivedMessage;
-    private static Timer t;
     
     UDPClient(int sizeOfData) throws SocketException, UnknownHostException {
         
         socket = new DatagramSocket();
         bytesSend = new byte[sizeOfData];
+        bytesReceived = new byte[sizeOfData];
         //address = InetAddress.getByName("localhost");
         //packet = new DatagramPacket(bytesSend, bytesSend.length, address, PORT_NUM);
     }
@@ -36,6 +36,11 @@ public class UDPClient {
     public void send(DatagramPacket aPacket) throws IOException
     {
         socket.send(aPacket);
+    }
+    
+    public void receive(DatagramPacket aPacket) throws IOException
+    {
+        socket.receive(aPacket);
     }
     
     public void setAddress(String name) throws UnknownHostException
@@ -55,7 +60,8 @@ public class UDPClient {
     
     public String receiveMessage(byte[] aByte)
     {
-        return receivedMessage = new String(aByte);
+        receivedMessage = new String(aByte);
+        return receivedMessage;
     }
     
     public void close()
@@ -93,20 +99,22 @@ public class UDPClient {
          * and increase the size of the message by doubling it, then doing the process 
          * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
          */
-        int packetSize = ONE_KB;
-        while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
+        int packetSize = SIXTEEN_KB;
+        //while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             long start = System.nanoTime();
             for (int i = 0; i < 100; i++) {
                 
                 client = new UDPClient(packetSize);
-                client.setMessage(message); // Sends the specified message
                 client.setAddress(args[0]); // Connects to the specified address
+                client.setMessage(message); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
+                System.out.println("Client is waiting on response from : " + address);
                 
-                bytesReceived = message.getBytes();
-                client.createPacket(bytesReceived, bytesReceived.length, address);
-                System.out.println("The new message is " + client.receiveMessage(packet.getData()));
+                client.receive(packet);
+                String aSentence = new String(packet.getData(), 0, packet.getLength());
+                System.out.println(aSentence);
+                
             }
             
             long difference = System.nanoTime() - start;
@@ -117,7 +125,7 @@ public class UDPClient {
             //System.out.println("The throughput is  " + throughput);
             
             packetSize *= 2;
-        }
+        //}
         
         //long difference = System.nanoTime() - start;
         //double timeInSeconds = (double) difference / 1000000000.0;
