@@ -43,7 +43,8 @@ public class UDPServerThread extends Thread {
                 bytesReceived = new byte[DATA_SIZE];
                 packet = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.receive(packet);
-                message = new String(packet.getData()); 
+                message = "Server received: ";
+                message += new String(packet.getData());
                 
                 bytesSend = new byte[DATA_SIZE];
                 bytesSend = message.getBytes();

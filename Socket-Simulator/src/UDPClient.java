@@ -10,6 +10,7 @@ public class UDPClient {
     private static DatagramSocket socket;
     private static DatagramPacket packet;
     private static byte[] bytesSend;
+    private static byte[] bytesReceived;
     private static final int MAX = 1000;
     private static final int DATA_SIZE = 1;
     private static final int ONE_KB = 1024;
@@ -42,9 +43,9 @@ public class UDPClient {
         address = InetAddress.getByName(name);
     }
     
-    public void createPacket(byte[] aBytesSend, int len, InetAddress ipAddress)
+    public void createPacket(byte[] bytes, int len, InetAddress ipAddress)
     {
-        packet = new DatagramPacket(aBytesSend, len, ipAddress, PORT_NUM);
+        packet = new DatagramPacket(bytes, len, ipAddress, PORT_NUM);
     }
     
     public void setMessage(String message)
@@ -102,6 +103,9 @@ public class UDPClient {
                 client.setAddress(args[0]); // Connects to the specified address
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
+                
+                bytesReceived = message.getBytes();
+                client.createPacket(bytesReceived, bytesReceived.length, address);
                 client.receiveMessage(packet.getData());
             }
             
