@@ -10,11 +10,14 @@ import java.net.InetAddress;
 public class UDPServerThread extends Thread {
     private static DatagramSocket socket;
     private static DatagramPacket packet, packet2;
+    private static InetAddress address;
     private static boolean flag = true;
     private static final int PORT_NUM = 9999;
     private static byte[] bytesReceived;
+    private static byte[] bytesSend;
     private static String message;
     private static int DATA_SIZE = 1024;
+    private static int port;
     
     public UDPServerThread() throws IOException {
         this("UPDServerThread");
@@ -41,7 +44,16 @@ public class UDPServerThread extends Thread {
                 packet = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.receive(packet);
                 message = new String(packet.getData()); 
+                
+                bytesSend = new byte[DATA_SIZE];
+                bytesSend = message.getBytes();
+                address = packet.getAddress();
+                port = packet.getPort();
+                
+                packet2 = new DatagramPacket(bytesSend, bytesSend.length, address, port);
+                socket.send(packet2);
                 System.out.println("Message received: " + message);
+                System.out.println("The address: " + address + " The port #: " + port);
            }
             catch (IOException e)
             {

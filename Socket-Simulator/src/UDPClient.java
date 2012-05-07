@@ -84,10 +84,10 @@ public class UDPClient {
          * and increase the size of the message by doubling it, then doing the process 
          * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
          */
-        int packetSize = 1024;
-        while (packetSize <= 65536) { //Jump out once we hit 64KB!
+        int packetSize = ONE_KB;
+        while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             
-            for (int i = 0; i < MAX; i++) {
+            for (int i = 0; i < 100; i++) {
                 
                 client = new UDPClient(packetSize);
                 client.setMessage("WADDUP, THIS IS CLIENT"); 
