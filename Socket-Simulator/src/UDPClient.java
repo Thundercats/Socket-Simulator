@@ -9,7 +9,7 @@ public class UDPClient {
     private static final int PORT_NUM = 9999;
     private static DatagramSocket socket;
     private static DatagramPacket packet;
-    private static byte[] bytesSent;
+    private static byte[] bytesSend;
     private static final int MAX = 1000;
     private static final int DATA_SIZE = 1;
     private static final int ONE_KB = 1024;
@@ -26,9 +26,9 @@ public class UDPClient {
     UDPClient(int sizeOfData) throws SocketException, UnknownHostException {
         
         socket = new DatagramSocket();
-        bytesSent = new byte[sizeOfData];
+        bytesSend = new byte[sizeOfData];
         //address = InetAddress.getByName("localhost");
-        //packet = new DatagramPacket(bytesSent, bytesSent.length, address, PORT_NUM);
+        //packet = new DatagramPacket(bytesSend, bytesSend.length, address, PORT_NUM);
     }
     
     
@@ -42,20 +42,19 @@ public class UDPClient {
         address = InetAddress.getByName(name);
     }
     
-    public void createPacket(byte[] aBytesSent, int len, InetAddress ipAddress)
+    public void createPacket(byte[] aBytesSend, int len, InetAddress ipAddress)
     {
-        packet = new DatagramPacket(aBytesSent, len, ipAddress, PORT_NUM);
+        packet = new DatagramPacket(aBytesSend, len, ipAddress, PORT_NUM);
     }
     
     public void setMessage(String message)
     {
-        bytesSent = message.getBytes();
+        bytesSend = message.getBytes();
     }
     
     public void receiveMessage(byte[] aByte)
     {
         receivedMessage = new String(aByte);
-        //System.out.println("Received message: " + receivedMessage);
     }
     
     public void close()
@@ -79,7 +78,7 @@ public class UDPClient {
 //            UDPClient client = new UDPClient(DATA_SIZE);
 //            client.setMessage("hello, this is the client");
 //            client.setAddress("localhost");
-//            client.createPacket(bytesSent, bytesSent.length, address);
+//            client.createPacket(bytesSend, bytesSend.length, address);
 //            client.send(packet);
 //            client.receiveMessage(packet.getData());  
 //        }
@@ -101,7 +100,7 @@ public class UDPClient {
                 client = new UDPClient(packetSize);
                 client.setMessage(message); // Sends the specified message
                 client.setAddress(args[0]); // Connects to the specified address
-                client.createPacket(bytesSent, bytesSent.length, address);
+                client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
                 client.receiveMessage(packet.getData());
             }
