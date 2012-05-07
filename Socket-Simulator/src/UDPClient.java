@@ -12,9 +12,11 @@ public class UDPClient {
     private static final int MAX = 1000;
     private static final int DATA_SIZE = 1;
     private static final int ONE_KB = 1024;
-    private static final int FOUR_KB = ONE_KB * 4;
-    private static final int EIGHT_KB = FOUR_KB * 2;
-    //private static final int SIXTEEN_KB = EIGH
+    private static final int FOUR_KB = 4096;
+    private static final int EIGHT_KB = 8192;
+    private static final int SIXTEEN_KB = 16384;
+    private static final int THIRTY_TWO_KB = 32768;
+    private static final int SIXTY_FOUR_KB = 65536;
     
     private static InetAddress address;
     private String receivedMessage;
@@ -83,12 +85,12 @@ public class UDPClient {
          * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
          */
         int packetSize = 1024;
-        while (packetSize <= 65536) { //Jump out once we hit 64KB!
+        while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < MAX; i++) {
                 
                 client = new UDPClient(packetSize);
-                client.setMessage("This is " + packetSize +" only"); 
+                client.setMessage("Hello, this client."); 
                 client.setAddress("localhost");
                 client.createPacket(bytesSent, bytesSent.length, address);
                 client.send(packet);
