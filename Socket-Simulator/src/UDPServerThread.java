@@ -16,7 +16,7 @@ public class UDPServerThread extends Thread {
     private static byte[] bytesReceived;
     private static byte[] bytesSend;
     private static String message;
-    private static int DATA_SIZE = 16384; //16 KB
+    private static int DATA_SIZE = 1024; //16 KB
     private static int port;
     
     public UDPServerThread() throws IOException {
@@ -36,7 +36,7 @@ public class UDPServerThread extends Thread {
 
     public void run()
     {
-        while(flag)
+        while(!socket.isClosed())
         {
             try {
                 
@@ -62,11 +62,10 @@ public class UDPServerThread extends Thread {
             {
                 e.printStackTrace();
             }
-            
-            flag = false;
-        }
+            //flag = false;
+        } 
         
-        this.close();
+        //this.close();
         //socket.close(); close() method takes care of this
     }
 }

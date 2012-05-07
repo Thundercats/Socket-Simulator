@@ -99,23 +99,27 @@ public class UDPClient {
          * and increase the size of the message by doubling it, then doing the process 
          * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
          */
-        int packetSize = SIXTEEN_KB;
-        //while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
+        int packetSize = ONE_KB;
+        while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             long start = System.nanoTime();
             for (int i = 0; i < 100; i++) {
                 
                 client = new UDPClient(packetSize);
                 client.setAddress(args[0]); // Connects to the specified address
+                socket.connect(address, PORT_NUM);
                 client.setMessage(message); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
-                System.out.println("Client is waiting on response from : " + address);
+                //System.out.println("Socket is  " + socket.getPort());
+                //System.out.println("# " + i + " Client is waiting on response from : " + address);
                 
+                client.createPacket(bytesReceived, bytesReceived.length, address);
                 client.receive(packet);
                 String aSentence = new String(packet.getData(), 0, packet.getLength());
-                System.out.println(aSentence);
-                
+                //System.out.println(aSentence);
             }
+            
+            socket.close();
             
             long difference = System.nanoTime() - start;
             double timeInSeconds = (double) difference / 1000000000.0;
@@ -125,14 +129,7 @@ public class UDPClient {
             //System.out.println("The throughput is  " + throughput);
             
             packetSize *= 2;
-        //}
-        
-        //long difference = System.nanoTime() - start;
-        //double timeInSeconds = (double) difference / 1000000000.0;
-//        double throughput = packet.getData().length / timeInSeconds;
-//        System.out.println("The elapse time is " + timeInSeconds);
-//        System.out.println("The avg is  " + timeInSeconds / 100);
-//        System.out.println("The throughput is  " + throughput);
+        }
     }
     
 }
