@@ -106,6 +106,7 @@ public class UDPClient {
                 
                 client = new UDPClient(packetSize);
                 client.setAddress(args[0]); // Connects to the specified address
+		// client.setSoTimeout("1000");
                 socket.connect(address, PORT_NUM);
                 client.setMessage(message); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
@@ -113,10 +114,17 @@ public class UDPClient {
                 //System.out.println("Socket is  " + socket.getPort());
                 //System.out.println("# " + i + " Client is waiting on response from : " + address);
                 
-                client.createPacket(bytesReceived, bytesReceived.length, address);
-                client.receive(packet);
-                String aSentence = new String(packet.getData(), 0, packet.getLength());
-                //System.out.println(aSentence);
+                DatagramPacket jeff = client.createPacket(bytesReceived, bytesReceived.length, address);
+		try{
+			socket.receive(jeff);
+         	       // client.receive(packet);
+        	        String aSentence = new String(jeff.getData(), 0, jeff.getLength());
+        	        //System.out.println(aSentence);
+		}
+		catch(SocketTimeoutException s)
+		{
+			continue;
+		}
             }
             
             socket.close();
