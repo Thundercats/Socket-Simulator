@@ -53,9 +53,9 @@ public class UDPClient {
         bytesSend = message.getBytes();
     }
     
-    public void receiveMessage(byte[] aByte)
+    public String receiveMessage(byte[] aByte)
     {
-        receivedMessage = new String(aByte);
+        return receivedMessage = new String(aByte);
     }
     
     public void close()
@@ -106,7 +106,7 @@ public class UDPClient {
                 
                 bytesReceived = message.getBytes();
                 client.createPacket(bytesReceived, bytesReceived.length, address);
-                client.receiveMessage(packet.getData());
+                System.out.println("The new message is " + client.receiveMessage(packet.getData()));
             }
             
             long difference = System.nanoTime() - start;
