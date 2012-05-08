@@ -9,6 +9,7 @@ public class UDPClient {
     private static final int PORT_NUM = 9999;
     private static DatagramSocket socket;
     private static DatagramPacket packet;
+    private static DatagramPacket pktReceived;
     private static byte[] bytesSend;
     private static byte[] bytesReceived;
     private static int total;
@@ -24,6 +25,7 @@ public class UDPClient {
     
     private static InetAddress address;
     private String receivedMessage;
+    private static String aSentence;
     
     UDPClient(int sizeOfData) throws SocketException, UnknownHostException {
         
@@ -110,22 +112,24 @@ public class UDPClient {
             long start = System.nanoTime();
             int numOfPacketsLost = 0;
             for (int i = 0; i < 100; i++) {
+                
                 client = new UDPClient(packetSize);
                 client.setAddress(args[0]); // Connects to the specified address
 		socket.setSoTimeout(1000);
-                socket.connect(address, PORT_NUM);
+                //socket.connect(address, PORT_NUM);
                 client.setMessage(message); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
                 //total2 += bytesSend.length;
                 //System.out.println("Socket is  " + socket.getPort());
                 //System.out.println("# " + i + " Client is waiting on response from : " + address);
-                
-		DatagramPacket pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length, address, PORT_NUM);
+                //66.172.12.122
+		//pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length, address, PORT_NUM);
+                pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
                 try{
 			socket.receive(pktReceived);
                         total += bytesReceived.length;
-        	        String aSentence = new String(pktReceived.getData(), 0, pktReceived.getLength());
+        	        aSentence = new String(pktReceived.getData(), 0, pktReceived.getLength());
 		}
 		catch(SocketTimeoutException s)
 		{
