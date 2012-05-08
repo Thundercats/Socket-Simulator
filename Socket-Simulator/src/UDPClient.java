@@ -11,6 +11,8 @@ public class UDPClient {
     private static DatagramPacket packet;
     private static byte[] bytesSend;
     private static byte[] bytesReceived;
+    private static int total;
+    private static long totalTime;
     private static final int MAX = 1000;
     private static final int DATA_SIZE = 1;
     private static final int ONE_KB = 1024;
@@ -28,6 +30,8 @@ public class UDPClient {
         socket = new DatagramSocket();
         bytesSend = new byte[sizeOfData];
         bytesReceived = new byte[sizeOfData];
+        total = 0;
+        //total2 = 0;
         //address = InetAddress.getByName("localhost");
         //packet = new DatagramPacket(bytesSend, bytesSend.length, address, PORT_NUM);
     }
@@ -77,6 +81,7 @@ public class UDPClient {
             System.out.println("Usage: UDPClient destination");
             System.exit(0);
         }
+        
        
         //t = new Timer();
         //Need to test:  1Kbyte, 4KB, 8 KB, 16KB, 32 KB, and 64KB
@@ -100,42 +105,48 @@ public class UDPClient {
          * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
          */
         int packetSize = ONE_KB;
+        //int packetSize = 1;
         while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             long start = System.nanoTime();
+            int numOfPacketsLost = 0;
             for (int i = 0; i < 100; i++) {
-                
                 client = new UDPClient(packetSize);
                 client.setAddress(args[0]); // Connects to the specified address
-		// client.setSoTimeout("1000");
+		socket.setSoTimeout(1000);
                 socket.connect(address, PORT_NUM);
                 client.setMessage(message); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
+                //total2 += bytesSend.length;
                 //System.out.println("Socket is  " + socket.getPort());
                 //System.out.println("# " + i + " Client is waiting on response from : " + address);
                 
-                DatagramPacket jeff = client.createPacket(bytesReceived, bytesReceived.length, address);
-		try{
-			socket.receive(jeff);
-         	       // client.receive(packet);
-        	        String aSentence = new String(jeff.getData(), 0, jeff.getLength());
-        	        //System.out.println(aSentence);
+		DatagramPacket pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length, address, PORT_NUM);
+                try{
+			socket.receive(pktReceived);
+                        total += bytesReceived.length;
+        	        String aSentence = new String(pktReceived.getData(), 0, pktReceived.getLength());
 		}
 		catch(SocketTimeoutException s)
 		{
+                        numOfPacketsLost++;
 			continue;
 		}
+                
+                totalTime += System.nanoTime() - start;
             }
             
             socket.close();
             
-            long difference = System.nanoTime() - start;
-            double timeInSeconds = (double) difference / 1000000000.0;
-            double throughput = packet.getData().length / timeInSeconds;
+            //long difference = System.nanoTime() - start;
+            //System.out.println("totalTime " + totalTime + " difference " + difference);
+           //double timeInSeconds = (double) difference / 1000000000.0;
+            double timeInSeconds = totalTime / 1000000000.0;
+            double throughput = total / timeInSeconds;
             //System.out.println("The elapse time is " + timeInSeconds);
-            System.out.println("For packetSize: " + packetSize + " the avg RTT is  " + timeInSeconds / 100);
-            //System.out.println("The throughput is  " + throughput);
-            
+            //System.out.println("For packetSize: " + packetSize + " # of packets lost " + numOfPacketsLost +" the avg RTT is  " + timeInSeconds / 100 + " the throughput is " + throughput);
+            System.out.println(packetSize + "   " + numOfPacketsLost + "    " + timeInSeconds/100 + "   " + throughput * 8 +"\n");
+   
             packetSize *= 2;
         }
     }
