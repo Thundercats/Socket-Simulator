@@ -7,14 +7,16 @@ public class TCPClient {
     {
         try {
             Socket socket = new Socket("localhost", 9999); //socket
-            
+            int i = 0;
             System.out.println("Connection established");
+            
             DataInputStream in =
                     new DataInputStream(socket.getInputStream());
-            System.out.println("from server: " + in.readLine());
-            DataOutputStream out = 
-                    new DataOutputStream(socket.getOutputStream());//out
             
+            System.out.println(i + " from server: " + in.readLine());
+            
+            //DataOutputStream out = 
+            //        new DataOutputStream(socket.getOutputStream());//out
             //BufferedReader in = 
                     //new BufferedReader(new InputStreamReader(socket.getInputStream()));
             

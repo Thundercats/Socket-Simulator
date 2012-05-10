@@ -37,21 +37,26 @@ public class TCPServer {
     {
        int port = 9999;
        String data = "L";
-       byte geoff = 'L';
+       byte geoff = 'L'; 
        try
             {
             ServerSocket serverSocket = new ServerSocket(port);
             Socket skt = serverSocket.accept();
-            //DataInputStream in =
-            //        new DataInputStream(server.getInputStream());//in
+            
             System.out.println("Connection Established");
             PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
             System.out.println("Data sending: '" + data + "'\n");
-            //DataOutputStream out =
-            //        new DataOutputStream(server.getOutputStream());//out
-            //server.close();//close
-            // out.print(data);
-            out.print(geoff);
+            
+            long start =  System.nanoTime();
+            
+            for(int i = 0; i < 1000; i++)
+            {
+                out.print(geoff);
+            }
+            
+            long diff = System.nanoTime() - start;
+            double timeInSeconds = diff / 1000000000.0; 
+            out.print("The avg RTT is " + timeInSeconds / 1000);
             out.close();
             skt.close();
             serverSocket.close();
