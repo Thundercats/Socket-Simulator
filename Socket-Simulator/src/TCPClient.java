@@ -7,7 +7,7 @@ public class TCPClient {
     {
 	String host = "localhost";
 	if(args.length>0)
-	    host=arg[0];
+	    host=args[0];
         try {
             Socket socket = new Socket(host, 9999); //socket
             int i = 0;
