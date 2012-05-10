@@ -16,7 +16,7 @@ public class UDPServerThread extends Thread {
     private static byte[] bytesReceived;
     private static byte[] bytesSend;
     private static String message;
-    private static int DATA_SIZE = 1024; //16 KB
+    private static int DATA_SIZE = 65536; //64 KB
     private static int port;
     
     public UDPServerThread() throws IOException {
