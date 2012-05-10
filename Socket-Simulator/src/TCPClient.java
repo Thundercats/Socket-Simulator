@@ -5,8 +5,11 @@ public class TCPClient {
     
     public static void main(String[] args)
     {
+	String host = "localhost";
+	if(args.length>0)
+	    host=arg[0];
         try {
-            Socket socket = new Socket("localhost", 9999); //socket
+            Socket socket = new Socket(host, 9999); //socket
             int i = 0;
             System.out.println("Connection established");
             
