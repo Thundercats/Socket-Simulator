@@ -7,81 +7,43 @@ public class TCPServer {
     private static final int FOUR_KB = 4096;
     private static final int EIGHT_KB = 8192;
     private static final int SIXTEEN_KB = 16384;
-    private static final int THIRTY_TWO_KB = 32768;
-    private static final int SIXTY_FOUR_KB = 65536;
-    //private ServerSocket serverSocket;
-//    
-//    public TCPServer(int portNum) throws IOException
-//    {
-//        serverSocket = new ServerSocket(portNum);
-//        serverSocket.setSoTimeout(10000);
-//    }
-//    
-    /**public void send()
-    //{
-        while(true)
-        {
-            try
-            {
-                ServerSocket server = new ServerSocket(9999);
-                Socket skt = serverSocket.accept();
-                DataInputStream in =
-                        new DataInputStream(server.getInputStream());//in
-                DataOutputStream out =
-                        new DataOutputStream(server.getOutputStream());//out
-                server.close();//close
-            }
-            catch(IOException e)
-            {
-                System.out.println("Errorr");
-                break;
-            }
-        }
-    }
-    */
+    private static final int THIRTY_TWO_KB = 32000;
+    private static final int SIXTY_FOUR_KB = 64000;
+    private static byte[] bytes;
+    private static DataInputStream in;
+    private static DataOutputStream out;
+    private static ServerSocket serverSocket;
+    private static Socket skt;
+ 
     public static void main(String[] args) throws IOException
     {
-       int port = 9999;
-       String data = "L";
-       byte geoff = 'L';
+       int port = 9999; 
        try
             {
-            ServerSocket serverSocket = new ServerSocket(port);
-            Socket skt = serverSocket.accept();
-            
-            System.out.println("Connection Established");
-            PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
-            System.out.println("Data sending: '" + ONE_KB + "'\n");
-            
-            int messageSize = ONE_KB;
-            //for(int i = 0; i < 1000; i++)
-            byte[] bytes;
-            
-            while (messageSize <= SIXTY_FOUR_KB) {
-              
-                long start =  System.nanoTime();
-                bytes = new byte[messageSize];
+                serverSocket = new ServerSocket(port);
+                skt = serverSocket.accept();
+                in = new DataInputStream(skt.getInputStream());
+                out = new DataOutputStream(skt.getOutputStream());
+                bytes = new byte[ONE_KB];
+                System.out.println("Connection Established"); 
                 
-                for (int i = 0; i < 100; i++) {
-                        out.print(ONE_KB);
-                    }
-
-                    
-                    
-                long diff = System.nanoTime() - start;
-                double timeInSeconds = diff / 1000000000.0; 
-                out.print("The avg RTT is " + timeInSeconds / 1000);
-                messageSize *= 2;
-            }
-            
-            out.close();
-            skt.close();
-            serverSocket.close();
+                while(true) 
+                {
+                  in.read(bytes);
+                  System.out.println("reading in");
+                  out.write(bytes);   
+                  System.out.println("sending out");
+                }
+                 
             
         } catch (IOException e) {
             System.out.println("Errorr");
-            //break;
+            e.printStackTrace(); 
         }
+                out.close();
+                in.close();
+                skt.close();
+                serverSocket.close();
        
     }
 }
