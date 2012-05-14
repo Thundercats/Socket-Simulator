@@ -25,10 +25,11 @@ public class TCPClient {
              System.out.println("in created");
              int messageSize = ONE_KB;  
              
+             //1 BYTE ONLY
              byte sendByte = "a".getBytes()[0];
              byte receivedByte;
              
-             long start = System.nanoTime(); 
+             long start = System.nanoTime();  
              for(int i = 0; i < 1000; i++)
              {
                  out.write(sendByte);
@@ -41,9 +42,8 @@ public class TCPClient {
              
              System.out.println("The size is " + " 1 byte " + " The avg RTT is " + timeInSeconds / 1000);
              
-             /*
-              * I commented out the while loop, currently only sending 1 KB to server
-              */
+             
+             //Reset and Send 1KB - 64KB
              start = 0;
              diff = 0;
              timeInSeconds = 0;
@@ -66,22 +66,23 @@ public class TCPClient {
                 }
                 
                 start = System.nanoTime(); 
+                byte totalData = 0;
                 for (int i = 0; i < 100; i++) 
                 {   
                         out.write(bytes, 0, bytes.length); 
                         //out.writeByte(i);
                         //System.out.println("i " + i + " data sending out >>>>");
                         out.flush(); 
-                        in.readFully(inBytes, 0, inBytes.length);
-                        
+                        in.readFully(inBytes, 0, inBytes.length); 
+                        totalData += inBytes[i];
                         //System.out.println("i " + i + " data receiving in <<<<<<");
                 }
                   
                 diff = System.nanoTime() - start;
                 timeInSeconds = diff / 1000000000.0;
-                
+                double throughput = (totalData * 8) / timeInSeconds;
                 //out.print("The avg RTT is " + timeInSeconds / 1000);
-                System.out.println("The size is " + messageSize + " The avg RTT is " + timeInSeconds / 100);
+                System.out.println("The size is " + messageSize + " The avg RTT is " + timeInSeconds / 100 + " throughput: " + throughput); 
                 //System.out.println("message size before: " + messageSize);
                 messageSize *= 2;
                 //System.out.println("message size after: " + messageSize);
