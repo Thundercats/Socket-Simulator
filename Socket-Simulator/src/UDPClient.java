@@ -5,7 +5,7 @@ import java.util.Timer;
 
 public class UDPClient {
    
-    private static String message = "WADDUP, THIS IS CLIENT";
+    //private static String message = "WADDUP, THIS IS CLIENT";
     private static final int PORT_NUM = 9999;
     private static DatagramSocket socket;
     private static DatagramPacket packet;
@@ -59,9 +59,15 @@ public class UDPClient {
         packet = new DatagramPacket(bytes, len, ipAddress, PORT_NUM);
     }
     
-    public void setMessage(String message)
+    public void setMessage(int packetSize)
     {
-        bytesSend = message.getBytes();
+        //bytesSend = message.getBytes();
+         for(int j = 0; j < packetSize; j++)
+         {
+                 //System.out.println("byte array beign filled");
+                    bytesSend[j] = "a".getBytes()[0]; 
+        }
+                
     }
     
     public String receiveMessage(byte[] aByte)
@@ -117,7 +123,8 @@ public class UDPClient {
                 client.setAddress(args[0]); // Connects to the specified address
 		socket.setSoTimeout(1000);
                 //socket.connect(address, PORT_NUM);
-                client.setMessage(message); // Sends the specified message
+                
+                client.setMessage(packetSize); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
                 //total2 += bytesSend.length;
@@ -126,6 +133,7 @@ public class UDPClient {
                 //66.172.12.122
 		//pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length, address, PORT_NUM);
                 pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
+                
                 try{
 			socket.receive(pktReceived);
                         total += bytesReceived.length;
@@ -150,8 +158,16 @@ public class UDPClient {
             //System.out.println("The elapse time is " + timeInSeconds);
             //System.out.println("For packetSize: " + packetSize + " # of packets lost " + numOfPacketsLost +" the avg RTT is  " + timeInSeconds / 100 + " the throughput is " + throughput);
             System.out.println(packetSize + "   " + numOfPacketsLost + "    " + timeInSeconds/100 + "   " + throughput * 8 +"\n");
-   
-            packetSize *= 2;
+            
+            if(packetSize == THIRTY_TWO_KB)
+            {    
+                packetSize = 64000;
+            }
+            else
+            {
+                packetSize *= 2;
+            }
+            
         }
     }
     
