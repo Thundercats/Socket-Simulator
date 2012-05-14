@@ -14,6 +14,7 @@ public class UDPClient {
     private static byte[] bytesReceived;
     private static int total;
     private static long totalTime;
+    private static long totalTime2;
     private static final int MAX = 1000;
     private static final int DATA_SIZE = 1;
     private static final int ONE_KB = 1024;
@@ -115,8 +116,10 @@ public class UDPClient {
         int packetSize = ONE_KB;
         //int packetSize = 1;
         while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
-            long start = System.nanoTime();
             int numOfPacketsLost = 0;
+            totalTime = 0;
+            totalTime2 = 0;
+            long start = System.nanoTime();
             for (int i = 0; i < 100; i++) {
                 
                 client = new UDPClient(packetSize);
@@ -138,6 +141,8 @@ public class UDPClient {
 			socket.receive(pktReceived);
                         total += bytesReceived.length;
         	        aSentence = new String(pktReceived.getData(), 0, pktReceived.getLength());
+                        totalTime2 += System.nanoTime() - start;
+                        
 		}
 		catch(SocketTimeoutException s)
 		{
@@ -153,11 +158,12 @@ public class UDPClient {
             //long difference = System.nanoTime() - start;
             //System.out.println("totalTime " + totalTime + " difference " + difference);
            //double timeInSeconds = (double) difference / 1000000000.0;
-            double timeInSeconds = totalTime / 1000000000.0;
-            double throughput = total / timeInSeconds;
+            double avgRTT = totalTime / 1000000000.0;
+            double timeInSeconds2 = totalTime2 / 1000000000.0;
+            double throughput = total / timeInSeconds2;
             //System.out.println("The elapse time is " + timeInSeconds);
             //System.out.println("For packetSize: " + packetSize + " # of packets lost " + numOfPacketsLost +" the avg RTT is  " + timeInSeconds / 100 + " the throughput is " + throughput);
-            System.out.println(packetSize + "   " + numOfPacketsLost + "    " + timeInSeconds/100 + "   " + throughput * 8 +"\n");
+            System.out.println(packetSize + "   " + numOfPacketsLost + "    " + avgRTT/100 + "   " + throughput * 8 +"\n");
             
             if(packetSize == THIRTY_TWO_KB)
             {    
