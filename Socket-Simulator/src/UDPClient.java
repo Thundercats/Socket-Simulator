@@ -5,7 +5,7 @@ import java.util.Timer;
 
 public class UDPClient {
    
-    //private static String message = "WADDUP, THIS IS CLIENT";
+    private static String message = "a";
     private static final int PORT_NUM = 9999;
     private static DatagramSocket socket;
     private static DatagramPacket packet;
@@ -61,12 +61,11 @@ public class UDPClient {
     }
     
     public void setMessage(int packetSize)
-    {
-        //bytesSend = message.getBytes();
+    { 
          for(int j = 0; j < packetSize; j++)
          {
-                 //System.out.println("byte array beign filled");
-                    bytesSend[j] = "a".getBytes()[0]; 
+              //System.out.println("byte array beign filled");
+              bytesSend[j] = "a".getBytes()[0]; 
         }
                 
     }
@@ -85,10 +84,10 @@ public class UDPClient {
     public static void main(String[] args) throws IOException {
        
         // Checks if there is an argument, else, show usage
-        if(args.length<=0)
+        //if(args.length<=0)
         {
-            System.out.println("Usage: UDPClient destination");
-            System.exit(0);
+          //  System.out.println("Usage: UDPClient destination");
+          //  System.exit(0);
         }
         
        
@@ -119,15 +118,22 @@ public class UDPClient {
             int numOfPacketsLost = 0;
             totalTime = 0;
             totalTime2 = 0;
-            long start = System.nanoTime();
+            
+            client = new UDPClient(packetSize);
+            client.setMessage(packetSize);
+            client.setAddress("localhost");
+            socket.setSoTimeout(1000);
+            
+            
+            
             for (int i = 0; i < 100; i++) {
-                
-                client = new UDPClient(packetSize);
-                client.setAddress(args[0]); // Connects to the specified address
-		socket.setSoTimeout(1000);
+                long start = System.nanoTime();
+                //client = new UDPClient(packetSize);
+                //client.setAddress(args[0]); // Connects to the specified address
+		
                 //socket.connect(address, PORT_NUM);
-                
-                client.setMessage(packetSize); // Sends the specified message
+                //client.setMessage(packetSize);
+                //client.setMessage(packetSize); // Sends the specified message
                 client.createPacket(bytesSend, bytesSend.length, address);
                 client.send(packet);
                 //total2 += bytesSend.length;
