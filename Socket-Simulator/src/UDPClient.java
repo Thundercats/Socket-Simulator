@@ -164,12 +164,13 @@ public class UDPClient {
             //long difference = System.nanoTime() - start;
             //System.out.println("totalTime " + totalTime + " difference " + difference);
            //double timeInSeconds = (double) difference / 1000000000.0;
-            double avgRTT = totalTime / 1000000000.0;
-            double timeInSeconds2 = totalTime2 / 1000000000.0;
+            double timeinSeconds = totalTime / 1000000000.0;
+            double timeInSeconds2 = totalTime2 / 1000000000.0; // doesn't count for lost packet
             double throughput = total / timeInSeconds2;
+            double avgRTT = timeinSeconds / 100; 
             //System.out.println("The elapse time is " + timeInSeconds);
             //System.out.println("For packetSize: " + packetSize + " # of packets lost " + numOfPacketsLost +" the avg RTT is  " + timeInSeconds / 100 + " the throughput is " + throughput);
-            System.out.println(packetSize + "   " + numOfPacketsLost + "    " + avgRTT/100 + "   " + throughput * 8 +"\n");
+            System.out.println(packetSize + "   " + numOfPacketsLost + "    " + avgRTT + "   " + throughput * 8 +"\n");
             
             if(packetSize == THIRTY_TWO_KB)
             {    
