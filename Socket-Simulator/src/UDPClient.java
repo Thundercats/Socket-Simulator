@@ -33,10 +33,7 @@ public class UDPClient {
         socket = new DatagramSocket();
         bytesSend = new byte[sizeOfData];
         bytesReceived = new byte[sizeOfData];
-        total = 0;
-        //total2 = 0;
-        //address = InetAddress.getByName("localhost");
-        //packet = new DatagramPacket(bytesSend, bytesSend.length, address, PORT_NUM);
+        total = 0; 
     }
     
     
@@ -64,8 +61,7 @@ public class UDPClient {
     { 
          for(int j = 0; j < packetSize; j++)
          {
-              //System.out.println("byte array beign filled");
-              bytesSend[j] = "a".getBytes()[0]; 
+             bytesSend[j] = "a".getBytes()[0]; //System.out.println("byte array beign filled");
         }
                 
     }
@@ -89,64 +85,59 @@ public class UDPClient {
           //  System.out.println("Usage: UDPClient destination");
           //  System.exit(0);
         }
-        
-       
-        //t = new Timer();
-        //Need to test:  1Kbyte, 4KB, 8 KB, 16KB, 32 KB, and 64KB
-       // long start = System.nanoTime();
-//        for(int i = 0; i < MAX; i++) {  <--- this whole loop is for the for b(ii) only
-//            UDPClient client = new UDPClient(DATA_SIZE);
-//            client.setMessage("hello, this is the client");
-//            client.setAddress("localhost");
-//            client.createPacket(bytesSend, bytesSend.length, address);
-//            client.send(packet);
-//            client.receiveMessage(packet.getData());  
-//        }
+         
         
         UDPClient client;
         
-        /*
-         * This is what I initially came up with for part b(iii)
-         * I sort of feel I am calculating delay improperly but I have no reference!
-         * Basically what I attempting with this loop is to start out with 1KB 
-         * and increase the size of the message by doubling it, then doing the process 
-         * 100 times like the directions ask. I included 2KB even thoguh it wasn't asked of us.
-         */
-        int packetSize = ONE_KB;
+        //1 Byte
+        int packetSize = 1;
+        totalTime = 0;
+        client = new UDPClient(packetSize);
+        client.setMessage(packetSize);
+        client.setAddress("localhost");
+        double avgRTT, throughput, timeInSeconds;
+        
+        for(int i = 0; i < 1000; i++)
+        {
+            long start = System.nanoTime();
+            client.createPacket(bytesSend, bytesSend.length, address);
+            client.send(packet);
+            pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
+            socket.receive(pktReceived);
+            total += bytesReceived.length;
+            totalTime += System.nanoTime() - start;
+        }
+        
+        timeInSeconds = totalTime / 1000000000.0;
+        avgRTT = timeInSeconds / 1000;
+        
+        System.out.println(packetSize + "    " + avgRTT + "\n");
+        
+        //1KB - 64KB 
+        packetSize = ONE_KB;
         //int packetSize = 1;
         while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             int numOfPacketsLost = 0;
             totalTime = 0;
             totalTime2 = 0;
-            
+            avgRTT = 0;
+            throughput = 0;
+            timeInSeconds = 0;
             client = new UDPClient(packetSize);
             client.setMessage(packetSize);
             client.setAddress("localhost");
             socket.setSoTimeout(1000);
-            
-            
-            
+              
             for (int i = 0; i < 100; i++) {
-                long start = System.nanoTime();
-                //client = new UDPClient(packetSize);
-                //client.setAddress(args[0]); // Connects to the specified address
-		
-                //socket.connect(address, PORT_NUM);
-                //client.setMessage(packetSize);
-                //client.setMessage(packetSize); // Sends the specified message
+                
+                long start = System.nanoTime(); 
                 client.createPacket(bytesSend, bytesSend.length, address);
-                client.send(packet);
-                //total2 += bytesSend.length;
-                //System.out.println("Socket is  " + socket.getPort());
-                //System.out.println("# " + i + " Client is waiting on response from : " + address);
-                //66.172.12.122
-		//pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length, address, PORT_NUM);
+                client.send(packet); 
                 pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
                 
                 try{
 			socket.receive(pktReceived);
-                        total += bytesReceived.length;
-        	        aSentence = new String(pktReceived.getData(), 0, pktReceived.getLength());
+                        total += bytesReceived.length; 
                         totalTime2 += System.nanoTime() - start;
                         
 		}
@@ -160,16 +151,12 @@ public class UDPClient {
             }
             
             socket.close();
-            
-            //long difference = System.nanoTime() - start;
-            //System.out.println("totalTime " + totalTime + " difference " + difference);
-           //double timeInSeconds = (double) difference / 1000000000.0;
-            double timeinSeconds = totalTime / 1000000000.0;
+             
+            timeInSeconds = totalTime / 1000000000.0;
             double timeInSeconds2 = totalTime2 / 1000000000.0; // doesn't count for lost packet
-            double throughput = total / timeInSeconds2;
-            double avgRTT = timeinSeconds / 100; 
-            //System.out.println("The elapse time is " + timeInSeconds);
-            //System.out.println("For packetSize: " + packetSize + " # of packets lost " + numOfPacketsLost +" the avg RTT is  " + timeInSeconds / 100 + " the throughput is " + throughput);
+            throughput = total / timeInSeconds2;
+            avgRTT = timeInSeconds / 100; 
+             
             System.out.println(packetSize + "   " + numOfPacketsLost + "    " + avgRTT + "   " + throughput * 8 +"\n");
             
             if(packetSize == THIRTY_TWO_KB)

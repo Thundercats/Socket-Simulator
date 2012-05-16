@@ -44,18 +44,9 @@ public class UDPServerThread extends Thread {
                 bytesReceived = new byte[DATA_SIZE];
                 packet = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.receive(packet);
-                //message = new String(packet.getData(),0,packet.getLength());
-                
-                //bytesSend = new byte[DATA_SIZE];
-                //bytesSend = ("Server received " + message).getBytes();
-                
-                //System.out.println("this is it: " + new String(bytesSend));
                 
                 address = packet.getAddress();
-                port = packet.getPort();
-                //bytesSend = packet.getData();
-                //length = packet.getData().length;
-                //packet2 = new DatagramPacket(bytesSend, bytesSend.length, address, port);
+                port = packet.getPort(); 
                 packet2 = new DatagramPacket(packet.getData(),packet.getData().length,address, port);
                 socket.send(packet2);
                 
@@ -65,8 +56,7 @@ public class UDPServerThread extends Thread {
             catch (IOException e)
             {
                 e.printStackTrace();
-            }
-            //flag = false;
+            } 
         } 
         
         //this.close();
