@@ -14,7 +14,7 @@ public class TCPClient {
     public static void main(String[] args)
     {
         try {
-             socket = new Socket("localhost", 9999); //socket 
+             socket = new Socket("66.172.12.122", 9998); //socket 
              
              System.out.println("Connection established");
 
@@ -73,16 +73,16 @@ public class TCPClient {
                         //System.out.println("i " + i + " data sending out >>>>");
                         out.flush(); 
                         in.readFully(inBytes, 0, inBytes.length); 
-                        totalData += inBytes[i];
+                        totalData += inBytes.length;
                         //System.out.println("i " + i + " data receiving in <<<<<<");
-                        diff = System.nanoTime() - start;
+                        diff += System.nanoTime() - start;
                 }
                    
                 timeInSeconds = diff / 1000000000.0;
                 double throughput = (totalData * 8) / timeInSeconds;
                 //double throughput = (messageSize * 100) / timeInSeconds;
                 //out.print("The avg RTT is " + timeInSeconds / 1000);
-                System.out.println( messageSize + "   "  + timeInSeconds / 100 + "   " + throughput + "\n"); 
+                System.out.println( messageSize + "   "  + totalData+"  "+ timeInSeconds / 100 + "   " + throughput + "\n"); 
                 //System.out.println("message size before: " + messageSize);
                 messageSize *= 2;
                 //System.out.println("message size after: " + messageSize);
