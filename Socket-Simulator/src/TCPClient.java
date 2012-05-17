@@ -24,6 +24,9 @@ public class TCPClient {
 	System.out.println(host +" "+port);
         try {
              socket = new Socket(host, port); //socket 
+             //socket.setSoTimeout(1000); FIRST line
+             //socket.setPerformancePreferences(0, 1, 2); SECOND line
+             //socket.setPerformancePreferences(1, 0, 0); THIRD line
              
              System.out.println("Connection established");
 
