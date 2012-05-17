@@ -32,11 +32,13 @@ public class TCPClient {
 			}
 			if(args[2].equals("fast")){
            	 		socket.setPerformancePreferences(0, 1, 2); // SECOND line
-				System.out.println("Timeout set to 1003 ms");
+				System.out.println("Sets the performance preference wtih high bandwidth to be prioritized above low latency, "
+                                        + "low latency above short connection time ");
 			}
 			if(args[2].equals("slow")){
             	 		socket.setPerformancePreferences(1, 0, 0); // THIRD line
-				System.out.println("Timeout set to 1003 ms");
+				System.out.println("sets the performance perference with short connection time "
+                                        + "to be prioritized above high bandwidth and low latency ");
 			}
 			//default: System.out.println("Invalid option supplied. No modifications made");
 		}
