@@ -1,8 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.Timer;
-
-
+ 
 public class UDPClient {
    
     private static String message = "a";
@@ -28,15 +27,14 @@ public class UDPClient {
     private String receivedMessage;
     private static String aSentence;
     
-    UDPClient(int sizeOfData) throws SocketException, UnknownHostException {
-        
+    UDPClient(int sizeOfData) throws SocketException, UnknownHostException 
+    {   
         socket = new DatagramSocket();
         bytesSend = new byte[sizeOfData];
         bytesReceived = new byte[sizeOfData];
         total = 0; 
     }
-    
-    
+      
     public void send(DatagramPacket aPacket) throws IOException
     {
         socket.send(aPacket);
@@ -78,44 +76,16 @@ public class UDPClient {
     }
     
     public static void main(String[] args) throws IOException {
-       
-        // Checks if there is an argument, else, show usage
-        //if(args.length<=0)
-        {
-          //  System.out.println("Usage: UDPClient destination");
-          //  System.exit(0);
-        }
-         
         
         UDPClient client;
         
         //1 Byte
-        int packetSize = 1;
-        totalTime = 0;
-        client = new UDPClient(packetSize);
-        client.setMessage(packetSize);
-        client.setAddress("localhost");
-        double avgRTT, throughput, timeInSeconds;
-        
-        for(int i = 0; i < 1000; i++)
-        {
-            long start = System.nanoTime();
-            client.createPacket(bytesSend, bytesSend.length, address);
-            client.send(packet);
-            pktReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
-            socket.receive(pktReceived);
-            total += bytesReceived.length;
-            totalTime += System.nanoTime() - start;
-        }
-        
-        timeInSeconds = totalTime / 1000000000.0;
-        avgRTT = timeInSeconds / 1000;
-        
-        System.out.println(packetSize + "    " + avgRTT + "\n");
+        int packetSize;
+        totalTime = 0; 
+        double avgRTT, throughput, timeInSeconds; 
         
         //1KB - 64KB 
-        packetSize = ONE_KB;
-        //int packetSize = 1;
+        packetSize = ONE_KB; 
         while (packetSize <= SIXTY_FOUR_KB) { //Jump out once we hit 64KB!
             int numOfPacketsLost = 0;
             totalTime = 0;
@@ -124,9 +94,10 @@ public class UDPClient {
             throughput = 0;
             timeInSeconds = 0;
             client = new UDPClient(packetSize);
-            client.setMessage(packetSize);
+            //client.setMessage(packetSize);
+            
             client.setAddress("localhost");
-            socket.setSoTimeout(1000);
+            socket.setSoTimeout(300);
               
             for (int i = 0; i < 100; i++) {
                 
@@ -148,27 +119,25 @@ public class UDPClient {
 		}
                 
                 totalTime += System.nanoTime() - start;
-            }
+            } 
             
-            socket.close();
-             
             timeInSeconds = totalTime / 1000000000.0;
             double timeInSeconds2 = totalTime2 / 1000000000.0; // doesn't count for lost packet
             throughput = total / timeInSeconds2;
             avgRTT = timeInSeconds / 100; 
-             
+            
             System.out.println(packetSize + "   " + numOfPacketsLost + "    " + avgRTT + "   " + throughput * 8 +"\n");
             
             if(packetSize == THIRTY_TWO_KB)
             {    
-                packetSize = 64000;
+                packetSize = 64000; 
             }
             else
             {
-                packetSize *= 2;
-            }
-            
-        }
+                packetSize *= 2; 
+            }  
+        } 
+            socket.close();           
     }
     
 }
