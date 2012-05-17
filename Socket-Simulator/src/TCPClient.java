@@ -21,12 +21,25 @@ public class TCPClient {
 	    if(args.length>1)
 		port = Integer.parseInt(args[1]); // Set port
 	}
-	System.out.println(host +" "+port);
+	System.out.println("Connecting to "+host +":"+port);
         try {
              socket = new Socket(host, port); //socket 
-             //socket.setSoTimeout(1000); FIRST line
-             //socket.setPerformancePreferences(0, 1, 2); SECOND line
-             //socket.setPerformancePreferences(1, 0, 0); THIRD line
+		if(args.length>=3)
+		{
+			if(args[2].equals("timeout")){
+				socket.setSoTimeout(1003); // FIRST line
+				System.out.println("Timeout set to 1003 ms");
+			}
+			if(args[2].equals("fast")){
+           	 		socket.setPerformancePreferences(0, 1, 2); // SECOND line
+				System.out.println("Timeout set to 1003 ms");
+			}
+			if(args[2].equals("slow")){
+            	 		socket.setPerformancePreferences(1, 0, 0); // THIRD line
+				System.out.println("Timeout set to 1003 ms");
+			}
+			//default: System.out.println("Invalid option supplied. No modifications made");
+		}
              
              System.out.println("Connection established");
 
