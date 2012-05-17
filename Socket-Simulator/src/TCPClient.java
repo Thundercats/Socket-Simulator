@@ -24,31 +24,29 @@ public class TCPClient {
 	System.out.println("Connecting to "+host +":"+port);
         try {
              socket = new Socket(host, port); //socket 
+             System.out.println("CONNECTION ESTABLISHED");
+             
 		if(args.length>=3)
 		{
+                    System.out.print("OPTIONS ENABLED ");
 			if(args[2].equals("timeout")){
-				socket.setSoTimeout(1003); // FIRST line
-				System.out.println("Timeout set to 1003 ms");
+				socket.setSoTimeout(1000); // FIRST line
+				System.out.println(": Timeout set to 1000 ms");
 			}
 			if(args[2].equals("fast")){
            	 		socket.setPerformancePreferences(0, 1, 2); // SECOND line
-				System.out.println("Sets the performance preference wtih high bandwidth to be prioritized above low latency, "
+				System.out.println(": Sets the performance preference with high bandwidth to be prioritized above low latency, "
                                         + "low latency above short connection time ");
 			}
 			if(args[2].equals("slow")){
             	 		socket.setPerformancePreferences(1, 0, 0); // THIRD line
-				System.out.println("sets the performance perference with short connection time "
+				System.out.println(": Sets the performance preference with short connection time "
                                         + "to be prioritized above high bandwidth and low latency ");
-			}
-			//default: System.out.println("Invalid option supplied. No modifications made");
+			} 
 		}
-             
-             System.out.println("Connection established");
-
-             out = new DataOutputStream(socket.getOutputStream()); //Data to send OUT to Server
-             System.out.println("out created");
-             in = new DataInputStream(socket.getInputStream()); //Data being read IN from server
-             System.out.println("in created");
+                
+             out = new DataOutputStream(socket.getOutputStream()); //Data to send OUT to Server 
+             in = new DataInputStream(socket.getInputStream()); //Data being read IN from server 
              int messageSize = ONE_KB;  
              
              //1 BYTE ONLY
@@ -77,10 +75,8 @@ public class TCPClient {
              while (messageSize <= SIXTY_FOUR_KB) {
              
                 bytes = new byte[messageSize];
-                inBytes = new byte[messageSize]; 
-                /*
-                 * filling the bytes array with "a"
-                 */
+                inBytes = new byte[messageSize];  
+                
                 for(int i = 0; i < messageSize; i++)
                 { 
                     bytes[i] = "a".getBytes()[0]; 
