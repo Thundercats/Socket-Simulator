@@ -79,7 +79,7 @@ public class UDPClient {
     public static void main(String[] args) throws IOException {
         
         UDPClient client;
-	String host = "localhost";
+	String host = "localhost"; // Default hostname
 
 	if(args.length>0)
 		host=args[0];
@@ -90,7 +90,6 @@ public class UDPClient {
         double avgRTT, throughput, timeInSeconds; 
         client = new UDPClient(packetSize);
         client.setAddress(host); 
-        //client.setAddress("localhost");
         for(int i = 0; i < MAX; i ++)
         {
             long start = System.nanoTime();
@@ -113,8 +112,6 @@ public class UDPClient {
             throughput = 0;
             timeInSeconds = 0;
             client = new UDPClient(packetSize);
-            //client.setMessage(packetSize); 
-            //client.setAddress("localhost");
               
             for (int i = 0; i < 100; i++) {
                 
