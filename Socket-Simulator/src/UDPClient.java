@@ -26,7 +26,12 @@ public class UDPClient {
     private static InetAddress address;
     private String receivedMessage;
     private static String aSentence;
-    
+
+    /**
+     * Creates a UDPClient
+     * @param sizeOfData size of the data being sent.
+     *
+     */
     UDPClient(int sizeOfData) throws SocketException, UnknownHostException 
     {   
         socket = new DatagramSocket();
@@ -36,26 +41,51 @@ public class UDPClient {
         total = 0; 
     }
       
+    /**
+     * Sends a DatagramPacket
+     * @param aPacket datagram packet to be sent
+     * 
+     */
     public void send(DatagramPacket aPacket) throws IOException
     {
         socket.send(aPacket);
     }
     
+    /**
+     * Receives a DatagramPacket
+     * @param aPacket datagram packet to be receives
+     * 
+     */
     public void receive(DatagramPacket aPacket) throws IOException
     {
         socket.receive(aPacket);
     }
     
+    /**
+     * Sets an address to send to
+     * @param name The address to send to
+     * 
+     */
     public void setAddress(String name) throws UnknownHostException
     {
         address = InetAddress.getByName(name);
     }
     
+    /**
+     * Creates a packet
+     * @param bytes Array of bytes
+     * @param len The length of the packet
+     * @param ipAddress The hostname of the packet
+     */
     public void createPacket(byte[] bytes, int len, InetAddress ipAddress)
     {
         packet = new DatagramPacket(bytes, len, ipAddress, PORT_NUM);
     }
     
+    /**
+     * Sets the messaage
+     * @param packetSize The size of the packet
+     */
     public void setMessage(int packetSize)
     { 
          for(int j = 0; j < packetSize; j++)
@@ -65,12 +95,19 @@ public class UDPClient {
                 
     }
     
+    /**
+     * Receives the messaage
+     * @param aByte Incoming byte array
+     */
     public String receiveMessage(byte[] aByte)
     {
         receivedMessage = new String(aByte);
         return receivedMessage;
     }
     
+    /**
+     * Closes the connection.
+     */
     public void close()
     {
         socket.close();
