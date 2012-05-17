@@ -17,7 +17,10 @@ public class TCPServer {
  
     public static void main(String[] args) throws IOException
     {
-       int port = 9999; 
+       int port = 9999; // Default Port
+	// Allow changing the default port
+	if(args.length > 0)
+		port=Integer.parseInt(args[0]);
        try
             {
                 serverSocket = new ServerSocket(port);

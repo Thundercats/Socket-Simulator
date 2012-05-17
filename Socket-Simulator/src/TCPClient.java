@@ -13,6 +13,14 @@ public class TCPClient {
     
     public static void main(String[] args)
     {
+	String host = "localhost"; // Default to localhost
+	int port = 9999; // Default to port 9999
+	// Allow changing connection parameters
+	if(args.length >0){
+	    host = args[0]; // Set host
+	    if(args.length>1)
+		port = Integer.parseInt(args[1]); // Set port
+	}
         try {
              socket = new Socket("66.172.12.122", 9998); //socket 
              
