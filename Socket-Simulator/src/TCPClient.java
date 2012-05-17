@@ -22,7 +22,7 @@ public class TCPClient {
 		port = Integer.parseInt(args[1]); // Set port
 	}
         try {
-             socket = new Socket("66.172.12.122", 9998); //socket 
+             socket = new Socket(host, port); //socket 
              
              System.out.println("Connection established");
 
@@ -58,42 +58,31 @@ public class TCPClient {
              while (messageSize <= SIXTY_FOUR_KB) {
              
                 bytes = new byte[messageSize];
-                inBytes = new byte[messageSize];
-                //System.out.println("arrays created");
-                
+                inBytes = new byte[messageSize]; 
                 /*
                  * filling the bytes array with "a"
                  */
                 for(int i = 0; i < messageSize; i++)
-                {
-                     //System.out.println("byte array beign filled");
+                { 
                     bytes[i] = "a".getBytes()[0]; 
                 }
                 
-               
-                //byte totalData = 0;
+                
                 int totalData = 0;
                 for (int i = 0; i < 100; i++) 
                 {   
                         start = System.nanoTime(); 
-                        out.write(bytes, 0, bytes.length); 
-                        //out.writeByte(i);
-                        //System.out.println("i " + i + " data sending out >>>>");
+                        out.write(bytes, 0, bytes.length);  
                         out.flush(); 
                         in.readFully(inBytes, 0, inBytes.length); 
-                        totalData += inBytes.length;
-                        //System.out.println("i " + i + " data receiving in <<<<<<");
+                        totalData += inBytes.length; 
                         diff += System.nanoTime() - start;
                 }
                    
                 timeInSeconds = diff / 1000000000.0;
-                double throughput = (totalData * 8) / timeInSeconds;
-                //double throughput = (messageSize * 100) / timeInSeconds;
-                //out.print("The avg RTT is " + timeInSeconds / 1000);
-                System.out.println( messageSize + "   "  + totalData+"  "+ timeInSeconds / 100 + "   " + throughput + "\n"); 
-                //System.out.println("message size before: " + messageSize);
-                messageSize *= 2;
-                //System.out.println("message size after: " + messageSize);
+                double throughput = (totalData * 8) / timeInSeconds; 
+                System.out.println( messageSize + "   "  + totalData+"  "+ timeInSeconds / 100 + "   " + throughput + "\n");  
+                messageSize *= 2; 
             } 
             
             in.close();

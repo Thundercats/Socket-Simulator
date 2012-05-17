@@ -27,8 +27,7 @@ public class TCPServer {
                 skt = serverSocket.accept();
                 in = new DataInputStream(skt.getInputStream());
                 out = new DataOutputStream(skt.getOutputStream());
-                bytes = new byte[ONE_KB];
-                //bytes = new byte[SIXTY_FOUR_KB];
+                bytes = new byte[ONE_KB]; 
                 System.out.println("Connection Established"); 
                 
                 while(true) 
