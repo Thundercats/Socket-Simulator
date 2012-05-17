@@ -79,13 +79,17 @@ public class UDPClient {
     public static void main(String[] args) throws IOException {
         
         UDPClient client;
+	String host = "localhost";
+
+	if(args.length>0)
+		host=args[0];
         
         //1 Byte
         int packetSize = 1;
         totalTime = 0; 
         double avgRTT, throughput, timeInSeconds; 
         client = new UDPClient(packetSize);
-        client.setAddress("66.172.12.122"); 
+        client.setAddress(host); 
         //client.setAddress("localhost");
         for(int i = 0; i < MAX; i ++)
         {

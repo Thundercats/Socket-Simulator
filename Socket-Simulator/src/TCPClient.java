@@ -21,6 +21,7 @@ public class TCPClient {
 	    if(args.length>1)
 		port = Integer.parseInt(args[1]); // Set port
 	}
+	System.out.println(host +" "+port);
         try {
              socket = new Socket(host, port); //socket 
              
